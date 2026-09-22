@@ -1,0 +1,21 @@
+
+=== SYSTEM 2: RULE-BASED WORKFLOW (no LLM) ===
+
+Q1: What is the hourly usage fee for HPC01?
+A: Hourly usage fee for HPC01: Rs. 450 / hr (₹450/hr)
+----------------------------------------------------------------------
+Q2: What is the total cost for running HPC01 for 10 hours and VM101 for 20 hours after a 15% departmental research grant discount?
+A: Total cost after 15% grant discount: Rs. 6,885 (₹6,885)
+----------------------------------------------------------------------
+Q3: Is SAND01 more expensive per hour than VM101, and by how much?
+A: Sorry, I do not have a rule for this type of question.
+----------------------------------------------------------------------
+Q4: What is the current operational status of VM101?
+A: Status of VM101 (Virtual Machine Cluster (64 vCPU, 256GB RAM, Web & Database Staging)): Under Maintenance (Linux kernel security patch in progress)
+----------------------------------------------------------------------
+Q5: Our Python deep learning script threw 'CUDA out of memory: Tried to allocate 4.00 GiB on GPU 0'. What code optimizations can we apply to fix this?
+A: Sorry, I am a rule-based workflow and do not have rules for debugging Python code.
+----------------------------------------------------------------------
+Q6: Can you check if quantum simulator node QBIT01 is online and what its hourly billing rate is?
+A: Sorry, I do not have a rule for this type of question.
+----------------------------------------------------------------------

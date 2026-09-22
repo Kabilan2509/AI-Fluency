@@ -1,0 +1,17 @@
+======================================================================
+CSE CLUSTER CHALLENGE: Hackathon Compute Budget Allocation
+======================================================================
+Q: We have a student hackathon compute grant of Rs. 3,500. Which two available servers can we book together for 5 hours within this budget?
+
+--- 1. WORKFLOW RESPONSE ---
+Workflow answer: Sorry, I do not have a rule for this type of question.
+
+--- 2. AGENT RESPONSE ---
+step 1: get_server_fee({'server_code': 'HPC01'}) -> Rs. 450 per hour (₹450/hr)
+step 2: get_server_fee({'server_code': 'VM101'}) -> Rs. 180 per hour (₹180/hr)
+step 3: get_server_fee({'server_code': 'EDGE01'}) -> Rs. 90 per hour (₹90/hr)
+step 4: get_server_fee({'server_code': 'SAND01'}) -> Rs. 250 per hour (₹250/hr)
+
+LLM error: Connection error.
+Final answer: The agent encountered an error while communicating with the model.
+======================================================================

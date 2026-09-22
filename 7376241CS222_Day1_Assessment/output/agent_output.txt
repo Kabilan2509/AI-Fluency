@@ -1,0 +1,61 @@
+============================================================
+AI AGENT (CSE Department HPC Cluster)
+============================================================
+
+============================================================
+Q1: What is the hourly usage fee for HPC01?
+------------------------------------------------------------
+step 1: get_server_fee({'server_code': 'HPC01'}) -> Rs. 450 per hour (₹450/hr)
+Final answer: The hourly usage fee for **HPC01** is **₹450 per hour**.
+
+============================================================
+Q2: What is the total cost for running HPC01 for 10 hours and VM101 for 20 hours after a 15% departmental research grant discount?
+------------------------------------------------------------
+step 1: get_server_fee({'server_code': 'HPC01'}) -> Rs. 450 per hour (₹450/hr)
+step 2: get_server_fee({'server_code': 'VM101'}) -> Rs. 180 per hour (₹180/hr)
+step 3: calculator({'expression': '(450*10)+(180*20)'}) -> 8100
+step 4: calculator({'expression': '8100*0.85'}) -> 6885.0
+Final answer: The total cost after applying the 15 % departmental research grant discount is **₹6,885**.
+
+============================================================
+Q3: Is SAND01 more expensive per hour than VM101, and by how much?
+------------------------------------------------------------
+step 1: get_server_fee({'server_code': 'SAND01'}) -> Rs. 250 per hour (₹250/hr)
+step 2: get_server_fee({'server_code': 'VM101'}) -> Rs. 180 per hour (₹180/hr)
+step 3: calculator({'expression': '250-180'}) -> 70
+Final answer: Yes.  
+SAND01 costs ₹250 per hour, while VM101 costs ₹180 per hour.  
+SAND01 is **₹70 per hour more expensive** than VM101.
+
+============================================================
+Q4: What is the current operational status of VM101?
+------------------------------------------------------------
+step 1: get_server_status({'server_code': 'VM101'}) -> Virtual Machine Cluster (64 vCPU, 256GB RAM, Web & Database Staging): Under Maintenance (Linux kernel security patch in progress)
+Final answer: **VM101** – *Under Maintenance* (Linux kernel security patch in progress).
+
+============================================================
+Q5: Our Python deep learning script threw 'CUDA out of memory: Tried to allocate 4.00 GiB on GPU 0'. What code optimizations can we apply to fix this?
+------------------------------------------------------------
+Final answer: Here are several practical code‑level optimizations you can apply to reduce GPU memory usage and avoid the “CUDA out of memory” error:
+
+| # | Optimization | Why it helps | Typical implementation |
+|---|--------------|--------------|------------------------|
+| 1 | **Use `torch.cuda.empty_cache()`** | Frees unused cached memory that PyTorch keeps for future allocations. | `torch.cuda.empty_cache()` after large tensors are no longer needed. |
+| 2 | **Reduce batch size** | Memory grows roughly linearly with batch size. | Decrease `batch_size` in your DataLoader. |
+| 3 | **Use `torch.float16` / mixed‑precision** | Half‑precision tensors use 50 % less memory and can speed up training. | `model = model.half(); inputs = inputs.half()` or use `torch.cuda.amp.autocast`. |
+| 4 | **Gradient checkpointing** | Stores only a subset of activations and recomputes them during backward pass. | `torch.utils.checkpoint.checkpoint` on large modules. |
+| 5 | **Delete unnecessary tensors** | Explicitly remove references so GC can free memory. | `del tensor; torch.cuda.empty_cache()` |
+| 6 | **Use `torch.no_grad()` for inference** | Prevents storing gradients for forward‑only passes. | Wrap inference code with `with torch.no_grad():`. |
+| 7 | **Optimize model architecture** | Fewer layers/filters → less memory. | Replace large convolutions with depth‑wise separable ones, prune channels, etc. |
+| 8 | **Use `torch.backends.cudnn.benchmark = True`** | Chooses the most efficient convolution algorithm for fixed input sizes, sometimes reducing memory. | `torch.backends.cudnn.benchmark = True` |
+| 9 | **Avoid in‑place operations that keep old tensors** | In‑place ops can keep references to previous values. | Prefer out‑of‑place ops or use `tensor.clone()` before in‑place changes. |
+|10 | **Profile memory usage** | Identify hotspots. | `torch.cuda.memory_summary()` or `torch.cuda.memory_allocated()` during training. |
+|11 | **Use `torch.utils.checkpoint` for large sub‑modules** | Recomputes activations on the fly. | Wrap heavy blocks: `checkpoint(block, *inputs)` |
+|12 | **Move data to CPU when not needed** | Keep only active tensors on GPU. | `tensor.cpu()` after processing. |
+|13 | **Use `torch.compile` (PyTorch 2.0+)** | Can reduce memory by fusing ops. | `model = torch.compile(model)` |
+|14 | **Batch‑norm folding / layer‑norm to fused ops**
+
+============================================================
+Q6: Can you check if quantum simulator node QBIT01 is online and what its hourly billing rate is?
+------------------------------------------------------------
+Final answer: The server code **QBIT01** is not in our database of available CSE servers. Therefore, I cannot provide its status or billing rate.

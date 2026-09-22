@@ -1,0 +1,4 @@
+get_server_fee('HPC01') -> Rs. 450 per hour (₹450/hr)
+get_server_status('VM101') -> Virtual Machine Cluster (64 vCPU, 256GB RAM, Web & Database Staging): Under Maintenance (Linux kernel security patch in progress)
+calculator('(10 * 450 + 20 * 180) * 0.85') -> 6885.0
+calculator('250 - 180') -> 70

@@ -1,0 +1,153 @@
+
+=== SYSTEM 1: CHATBOT | provider: groq | model: openai/gpt-oss-20b ===
+
+Q1: What is the hourly usage fee for HPC01?
+A: 
+----------------------------------------------------------------------
+Q2: What is the total cost for running HPC01 for 10 hours and VM101 for 20 hours after a 15% departmental research grant discount?
+A: I’m happy to crunch the numbers for you!  
+To compute the total cost after the 15 % research‑grant discount, I’ll need the hourly rates for:
+
+- **HPC01** (the high‑performance compute node)  
+- **VM101** (the virtual machine)
+
+Once you provide those rates, I can calculate:
+
+1. **Cost before discount**  
+   \[
+   \text{Cost}_{\text{HPC01}} = \text{Rate}_{\text{HPC01}} \times 10\ \text{hrs}
+   \]
+   \[
+   \text{Cost}_{\text{VM101}} = \text{Rate}_{\text{VM101}} \times 20\ \text{hrs}
+   \]
+   \[
+   \text{Total before discount} = \text{Cost}_{\text{HPC01}} + \text{Cost}_{\text{VM101}}
+   \]
+
+2. **Apply the 15 % discount**  
+   \[
+   \text{Total after discount} = \text{Total before discount} \times (1 - 0.15)
+   \]
+
+Just let me know the hourly rates, and I’ll give you the final figure!
+----------------------------------------------------------------------
+Q3: Is SAND01 more expensive per hour than VM101, and by how much?
+A: I’m not sure of the exact hourly rates for those two resources. Could you share the current cost per hour for **SAND01** and **VM101**? Once I have those numbers, I can tell you whether SAND01 is more expensive and by how much.
+----------------------------------------------------------------------
+Q4: What is the current operational status of VM101?
+A: I don’t have real‑time visibility into the cluster’s state, but you can quickly check the status of **VM101** yourself.  
+Here are a few ways to do that:
+
+| Method | Command / Tool | What it shows |
+|--------|----------------|---------------|
+| **SLURM** (if the cluster uses SLURM) | `scontrol show node VM101` | Node state (IDLE, RUNNING, DOWN, etc.), CPU/Memory usage, and any pending jobs. |
+| **PBS/Torque** | `pbsnodes -l VM101` | Node state, load, and any queued jobs. |
+| **Direct SSH** | `ssh vm101 'uptime && free -h && df -h'` | Basic system health: load, memory, disk usage. |
+| **Cluster Dashboard** | Open the web UI (e.g., Horizon, CloudStack, or a custom dashboard) and navigate to the node list. | Visual status, alerts, and recent activity. |
+| **API** | If your cluster exposes a REST API, you can query `/nodes/VM101` (check the API docs). | JSON payload with detailed metrics. |
+
+### Quick Check (SLURM example)
+
+```bash
+$ scontrol show node VM101
+NodeName=VM101
+   State=IDLE
+   CPUS=32
+   CPUsAlloc=0
+   CPUsIdle=32
+   CPUsInUse=0
+   CPUsReserved=0
+   ...
+```
+
+If the node is **IDLE** or **RUNNING**, it’s operational. If it shows **DOWN**, **MAINT**, or **FAILED**, it’s not currently available.
+
+### If you need help interpreting the output
+
+- **IDLE** – ready to accept jobs.
+- **RUNNING** – currently executing a job.
+- **DOWN** – offline (maintenance, power off, etc.).
+- **MAINT** – under maintenance; will come back online soon.
+- **FAILED** – hardware/software failure; contact support.
+
+Feel free to run the appropriate command for your environment, and let me know what you see if you need further assistance!
+----------------------------------------------------------------------
+Q5: Our Python deep learning script threw 'CUDA out of memory: Tried to allocate 4.00 GiB on GPU 0'. What code optimizations can we apply to fix this?
+A: Below is a “tool‑kit” of code‑level tricks that usually shave several GiB off a PyTorch model’s GPU footprint.  
+Pick the ones that fit your workflow, mix and match, and re‑profile after each change.
+
+| # | Technique | Why it helps | Typical code snippet | Notes |
+|---|-----------|--------------|----------------------|-------|
+| 1 | **Reduce batch size** | Directly cuts the number of activations kept in memory. | `batch_size = 32` → `batch_size = 16` | Use gradient accumulation to keep the same effective batch size. |
+| 2 | **Gradient accumulation** | Allows a small batch per step but still trains with a large effective batch. | ```python<br>accum_steps = 4<br>optimizer.zero_grad()<br>for i, (x, y) in enumerate(dataloader):<br>    loss = model(x, y).mean() / accum_steps<br>    loss.backward()<br>    if (i+1) % accum_steps == 0:<br>        optimizer.step()<br>        optimizer.zero_grad()<br>``` | Memory stays low; training time per epoch increases. |
+| 3 | **Mixed‑precision (FP16)** | Activations and gradients are stored in 16‑bit, cutting memory by ~50 %. | ```python<br>scaler = torch.cuda.amp.GradScaler()<br>for x, y in dataloader:<br>    with torch.cuda.amp.autocast():<br>        loss = model(x, y).mean()<br>    scaler.scale(loss).backward()<br>    scaler.step(optimizer)<br>    scaler.update()<br>``` | Requires CUDA 10.1+ and cuDNN 7.6+. |
+| 4 | **Gradient checkpointing** | Recomputes intermediate activations during backward pass instead of storing them. | ```python<br>from torch.utils.checkpoint import checkpoint<br>def forward(x):<br>    return checkpoint(model, x)<br>``` | Adds compute overhead; good for very deep nets. |
+| 5 | **`torch.no_grad()` during inference** | Prevents storing gradients for forward‑only passes. | ```python<br>with torch.no_grad():<br>    preds = model(x)<br>``` | Essential for evaluation or inference scripts. |
+| 6 | **`torch.cuda.empty_cache()`** | Frees unused cached memory back to the OS. | ```python<br>torch.cuda.empty_cache()<br>``` | Use sparingly; it does not reduce the *allocated* memory, only the *reserved* cache. |
+| 7 | **`torch.backends.cudnn.benchmark = True`** | Lets cuDNN pick the fastest algorithm for a fixed input size, often using less memory. | ```python<br>torch.backends.cudnn.benchmark = True<br>``` | Only safe when input shapes are constant. |
+| 8 | **`torch.compile()` (PyTorch 2.0+)** | Optimizes
+----------------------------------------------------------------------
+Q6: Can you check if quantum simulator node QBIT01 is online and what its hourly billing rate is?
+A: I don’t have real‑time access to the cluster’s node status or billing database, but you can quickly verify both pieces of information yourself with a couple of simple commands (or by looking at the web portal that the CSE HPC team maintains).
+
+---
+
+## 1. Check whether **QBIT01** is online
+
+### From the command line
+
+```bash
+# 1.1  Show the state of all nodes
+sinfo -N -l | grep QBIT01
+
+# 1.2  If you want a more detailed view
+scontrol show node QBIT01
+```
+
+- **`sinfo`** will list the node’s state (`idle`, `alloc`, `down`, etc.).  
+- **`scontrol show node`** gives you the full node record, including whether it’s in a `down` state, any pending maintenance, or if it’s currently allocated.
+
+If the node is listed as `idle` or `alloc`, it’s up and ready to use. If it shows `down` or `drain`, it’s currently offline or under maintenance.
+
+### From the web portal
+
+Most HPC sites have a status page (often at `https://hpc.cse.edu/status` or similar). Look for a section titled “Node Status” or “Cluster Health” and locate **QBIT01**. The portal will usually show a green/red indicator and a brief reason if it’s down.
+
+---
+
+## 2. Find the hourly billing rate for **QBIT01**
+
+The billing rate is not stored in the Slurm node record; it’s maintained in the HPC billing system (often a separate database or a spreadsheet that the CSE finance team publishes). Here’s how to locate it:
+
+### 2.1  Check the official billing documentation
+
+- **HPC Billing Portal** – log in to the HPC billing portal (e.g., `https://hpc.cse.edu/billing`).  
+- **Node Rate Sheet** – look for a PDF or spreadsheet titled “Node Rates – Quantum Simulators” or similar.  
+- **Search for “QBIT01”** – the sheet will list the hourly cost (e.g., `$0.75/hr`).
+
+### 2.2  Ask the HPC support team
+
+If you can’t find the rate online, send a quick email to the HPC help desk:
+
+```
+Subject: Billing rate for QBIT01
+
+Hi HPC Team,
+
+Could you please confirm the current hourly billing rate for the quantum simulator node QBIT01? I’d like to budget my usage for the upcoming project.
+
+Thanks,
+[Your Name]
+```
+
+---
+
+## Quick Summary
+
+| Item | How to Check |
+|------|--------------|
+| **Node online status** | `sinfo -N -l | grep QBIT01` or `scontrol show node QBIT01` |
+| **Hourly billing rate** | Look in the HPC billing portal or node‑rate spreadsheet; otherwise email the HPC help desk |
+
+If you run the commands above and still have questions, let me know the output and I can help interpret it!
+----------------------------------------------------------------------
