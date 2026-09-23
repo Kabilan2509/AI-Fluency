@@ -1,0 +1,13 @@
+=== SELF-CONSISTENCY | provider: groq | model: openai/gpt-oss-20b ===
+
+QUESTION: A film club rents a camera for Rs. 1,200 per day and a microphone for Rs. 350 per day for 2 days. It receives a 10% discount on the total. What does it pay? 
+
+run 1: 2790
+run 2: ** 2790
+run 3: **Rs. 2,790**
+run 4: ** 2790
+run 5: 2790
+
+Majority answer (2/5): 2790
+Expected answer: Rs. 2,790
+At temperature 0, repeated requests are normally deterministic for a fixed model/provider.

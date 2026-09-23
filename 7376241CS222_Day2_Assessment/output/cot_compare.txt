@@ -1,0 +1,78 @@
+=== DIRECT PROMPTING VS CHAIN-OF-THOUGHT | provider: groq | model: openai/gpt-oss-20b ===
+
+========================================================================
+QUESTION 1: A film club rents a camera for Rs. 1,200 per day and a microphone for Rs. 350 per day for 2 days. It receives a 10% discount on the total. What does it pay?
+
+--- DIRECT PROMPT ---
+ Rs. 2,790.
+
+--- CHAIN-OF-THOUGHT ---
+ **Step 1:** Calculate the cost of the camera for 2 days.  
+\(1200 \text{ Rs/day} \times 2 \text{ days} = 2400 \text{ Rs}\)
+
+**Step 2:** Calculate the cost of the microphone for 2 days.  
+\(350 \text{ Rs/day} \times 2 \text{ days} = 700 \text{ Rs}\)
+
+**Step 3:** Find the total cost before discount.  
+\(2400 \text{ Rs} + 700 \text{ Rs} = 3100 \text{ Rs}\)
+
+**Step 4:** Compute the 10% discount.  
+\(3100 \text{ Rs} \times 0.10 = 310 \text{ Rs}\)
+
+**Step 5:** Subtract the discount from the total cost.  
+\(3100 \text{ Rs} - 310 \text{ Rs} = 2790 \text{ Rs}\)
+
+**Final Answer:** 2790 
+
+========================================================================
+QUESTION 2: A media lab has 12 editing computers. Each is used by 3 students in the morning and 2 in the afternoon. How many studentsessions occur in one day?
+
+--- DIRECT PROMPT ---
+ 60 student sessions occur in one day.
+
+--- CHAIN-OF-THOUGHT ---
+ **Step 1:**  
+Determine how many sessions occur on one computer in a day.  
+- Morning sessions per computer = 3  
+- Afternoon sessions per computer = 2  
+
+**Step 2:**  
+Add the morning and afternoon sessions for one computer.  
+\(3 + 2 = 5\) sessions per computer per day.
+
+**Step 3:**  
+Multiply the sessions per computer by the number of computers.  
+\(12 \text{ computers} \times 5 \text{ sessions/computer} = 60\) sessions.
+
+**Final Answer:** 60 
+
+========================================================================
+QUESTION 3: Neha submits before Omar. Omar submits before Priya. Karan submits after Priya. Who submits first and last?
+
+--- DIRECT PROMPT ---
+ Neha submits first, and Karan submits last.
+
+--- CHAIN-OF-THOUGHT ---
+ **Step 1:**  
+List the given relationships.  
+- Neha submits before Omar → Neha < Omar  
+- Omar submits before Priya → Omar < Priya  
+- Karan submits after Priya → Karan > Priya  
+
+**Step 2:**  
+Chain the inequalities.  
+From Neha < Omar and Omar < Priya we get  
+Neha < Omar < Priya.  
+
+**Step 3:**  
+Insert Karan using the third relation.  
+Since Karan > Priya, Karan comes after Priya.  
+Thus the full order is  
+Neha < Omar < Priya < Karan.  
+
+**Step 4:**  
+Identify the first and last submitters.  
+- First (earliest) submitter: **Neha**  
+- Last (latest) submitter: **Karan**  
+
+Final Answer: Neha first, Karan last.
